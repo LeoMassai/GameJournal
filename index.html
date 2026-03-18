@@ -36,6 +36,34 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .page{display:none;animation:pIn .2s ease}.page.active{display:block}
 @keyframes pIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
+
+/* DASHBOARD DROPDOWN */
+.dash-topbar{display:flex;justify-content:flex-end;align-items:center;margin:0 0 6px}
+.dash-dd{position:relative}
+.dash-dd-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--m1);font-size:.68rem;font-weight:700;min-height:auto}
+.dash-dd-btn:hover{transform:none;border-color:var(--line2);background:rgba(255,255,255,.045);color:var(--text)}
+.dash-dd.open .dash-dd-btn{color:var(--accent);border-color:rgba(167,139,250,.2);background:rgba(167,139,250,.05)}
+.dash-dd-menu{position:absolute;top:calc(100% + 6px);right:0;width:min(320px,calc(100vw - 24px));padding:8px;border-radius:14px;border:1px solid var(--line2);background:rgba(12,15,30,.96);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 50px rgba(0,0,0,.32);display:none;z-index:120}
+.dash-dd.open .dash-dd-menu{display:block}
+.dash-dd-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 4px 8px}
+.dash-dd-title{font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text)}
+.dash-dd-sub{font-size:.58rem;color:var(--m2)}
+.dash-dd-reset{background:none;border:none;color:var(--accent);font-size:.62rem;font-weight:700;min-height:auto;padding:0}
+.dash-dd-reset:hover{transform:none;text-decoration:underline;text-underline-offset:2px}
+.dash-dd-list{display:grid;gap:6px}
+.dash-dd-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 9px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+.dash-dd-meta{min-width:0}
+.dash-dd-label{font-size:.72rem;font-weight:700;color:var(--text)}
+.dash-dd-desc{font-size:.58rem;color:var(--m2);margin-top:1px}
+.dash-dd-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.dash-mini-btn{min-height:auto;padding:4px 7px;border-radius:999px;font-size:.6rem;font-weight:700;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--m1)}
+.dash-mini-btn:hover{transform:none;background:rgba(255,255,255,.05);color:var(--text)}
+.dash-mini-btn.active{border-color:rgba(167,139,250,.18);color:var(--accent);background:rgba(167,139,250,.05)}
+.dash-mini-btn:disabled{opacity:.35;cursor:not-allowed}
+.dash-empty{margin-top:6px;display:none;text-align:center}
+.dash-empty.show{display:block}
+.dash-hidden{display:none !important}
+
 /* GLASS */
 .g{background:linear-gradient(170deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%)}
 .sec{padding:12px}
@@ -425,15 +453,22 @@ svg text{font-family:var(--f)}
 
 <!-- DASHBOARD -->
 <div class="page active" id="pageDash">
-  <section class="g hero"><div class="hero-l"><div class="pill"><span class="dot"></span>Game Journal</div><h1>Track every game you finish.</h1><p class="hero-sub">Score, compare, recap — saved locally.</p><div class="formula-row">⚖️ <span id="formulaText"></span> <button type="button" id="editWeightsBtn">Edit</button></div></div><div class="gauge-box"><div class="gauge-w"><svg class="gauge-svg" viewBox="0 0 120 120"><circle class="gauge-bg" cx="60" cy="60" r="52"/><circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" stroke="var(--accent)"/></svg><div class="gauge-c"><div class="gauge-s" id="liveScore">0</div><div class="gauge-t" id="liveTier"></div></div></div><div class="gauge-cats"><div>GFX<b id="pGfx">0</b></div><div>Play<b id="pPlay">0</b></div><div>Story<b id="pStory">0</b></div><div>Long<b id="pLong">0</b></div><div>Snd<b id="pSnd">0</b></div></div></div></section>
-  <section class="stats"><div class="g stat"><div class="stat-top"><span class="stat-ico">🎮</span><span class="stat-lbl">Finished</span></div><div class="stat-val" id="sGames">0</div><div class="stat-sub" id="sBest">—</div></div><div class="g stat"><div class="stat-top"><span class="stat-ico">⏱️</span><span class="stat-lbl">Hours</span></div><div class="stat-val" id="sHours">0</div><div class="stat-sub" id="sAvgH">—</div></div><div class="g stat"><div class="stat-top"><span class="stat-ico">⭐</span><span class="stat-lbl">Avg</span></div><div class="stat-val" id="sAvg">0</div><div class="stat-sub" id="sTrend">—</div></div><div class="g stat"><div class="stat-top"><span class="stat-ico">🏷️</span><span class="stat-lbl">Genre</span></div><div class="stat-val" id="sGenre">—</div><div class="stat-sub" id="sPlat">—</div></div></section>
-  <section class="g now-playing" id="npSec" style="display:none"><div class="np-title">Now Playing</div><div class="np-list" id="npList"></div></section>
-  <section class="ms-sec g"><div class="ms-row" id="msRow"></div></section>
-  <section class="charts-row"><div class="g sec"><div class="sh"><span>Taste Profile</span></div><div class="chart-box"><svg id="radar" viewBox="0 0 260 200" width="100%" height="100%"></svg></div></div><div class="g sec"><div class="sh"><span>Top Rated</span></div><div class="bar-box" id="topChart"></div></div></section>
-  <section class="g sec heatmap-sec"><div class="sh"><span>Activity</span><span class="sub">Games finished per month</span></div><div id="heatmap"></div></section>
-  <section class="g sec scatter-sec"><div class="sh"><span>Hours vs Score</span><span class="sub">Do longer games score higher?</span></div><div class="scatter-box"><svg id="scatter" width="100%" height="100%" viewBox="0 0 860 140"></svg></div></section>
-  <section class="g sec tl-sec"><div class="sh"><span>Score Timeline</span></div><div class="tl-box"><svg id="timeline" width="100%" height="100%" viewBox="0 0 860 130"></svg></div></section>
-  <section class="g sec recent-sec"><div class="sh"><span>Recent</span><button class="secondary" type="button" id="dashSeeAll" style="min-height:24px;padding:2px 8px;font-size:.62rem">See all →</button></div><div class="recent-list" id="recentList"></div><button class="see-all-btn" type="button" id="dashAdd">✦ Add game</button></section>
+  <div class="dash-topbar">
+    <div class="dash-dd" id="dashDd">
+      <button class="dash-dd-btn" type="button" id="dashDdBtn">⚙️ Dashboard</button>
+      <div class="dash-dd-menu" id="dashDdMenu"></div>
+    </div>
+  </div>
+  <section class="g hero" data-dash-panel="hero"><div class="hero-l"><div class="pill"><span class="dot"></span>Game Journal</div><h1>Track every game you finish.</h1><p class="hero-sub">Score, compare, recap — saved locally.</p><div class="formula-row">⚖️ <span id="formulaText"></span> <button type="button" id="editWeightsBtn">Edit</button></div></div><div class="gauge-box"><div class="gauge-w"><svg class="gauge-svg" viewBox="0 0 120 120"><circle class="gauge-bg" cx="60" cy="60" r="52"/><circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" stroke="var(--accent)"/></svg><div class="gauge-c"><div class="gauge-s" id="liveScore">0</div><div class="gauge-t" id="liveTier"></div></div></div><div class="gauge-cats"><div>GFX<b id="pGfx">0</b></div><div>Play<b id="pPlay">0</b></div><div>Story<b id="pStory">0</b></div><div>Long<b id="pLong">0</b></div><div>Snd<b id="pSnd">0</b></div></div></div></section>
+  <section class="stats" data-dash-panel="stats"><div class="g stat"><div class="stat-top"><span class="stat-ico">🎮</span><span class="stat-lbl">Finished</span></div><div class="stat-val" id="sGames">0</div><div class="stat-sub" id="sBest">—</div></div><div class="g stat"><div class="stat-top"><span class="stat-ico">⏱️</span><span class="stat-lbl">Hours</span></div><div class="stat-val" id="sHours">0</div><div class="stat-sub" id="sAvgH">—</div></div><div class="g stat"><div class="stat-top"><span class="stat-ico">⭐</span><span class="stat-lbl">Avg</span></div><div class="stat-val" id="sAvg">0</div><div class="stat-sub" id="sTrend">—</div></div><div class="g stat"><div class="stat-top"><span class="stat-ico">🏷️</span><span class="stat-lbl">Genre</span></div><div class="stat-val" id="sGenre">—</div><div class="stat-sub" id="sPlat">—</div></div></section>
+  <section class="g now-playing" id="npSec" style="display:none" data-dash-panel="now-playing"><div class="np-title">Now Playing</div><div class="np-list" id="npList"></div></section>
+  <section class="ms-sec g" data-dash-panel="milestones"><div class="ms-row" id="msRow"></div></section>
+  <section class="charts-row" data-dash-panel="charts"><div class="g sec"><div class="sh"><span>Taste Profile</span></div><div class="chart-box"><svg id="radar" viewBox="0 0 260 200" width="100%" height="100%"></svg></div></div><div class="g sec"><div class="sh"><span>Top Rated</span></div><div class="bar-box" id="topChart"></div></div></section>
+  <section class="g sec heatmap-sec" data-dash-panel="activity"><div class="sh"><span>Activity</span><span class="sub">Games finished per month</span></div><div id="heatmap"></div></section>
+  <section class="g sec scatter-sec" data-dash-panel="hours-score"><div class="sh"><span>Hours vs Score</span><span class="sub">Do longer games score higher?</span></div><div class="scatter-box"><svg id="scatter" width="100%" height="100%" viewBox="0 0 860 140"></svg></div></section>
+  <section class="g sec tl-sec" data-dash-panel="timeline"><div class="sh"><span>Score Timeline</span></div><div class="tl-box"><svg id="timeline" width="100%" height="100%" viewBox="0 0 860 130"></svg></div></section>
+  <section class="g sec recent-sec" data-dash-panel="recent"><div class="sh"><span>Recent</span><button class="secondary" type="button" id="dashSeeAll" style="min-height:24px;padding:2px 8px;font-size:.62rem">See all →</button></div><div class="recent-list" id="recentList"></div><button class="see-all-btn" type="button" id="dashAdd">✦ Add game</button></section>
+  <section class="g sec dash-empty" id="dashEmpty"><div class="sh"><span>Dashboard</span></div><div style="color:var(--m1);font-size:.74rem;line-height:1.5">All Home panels are hidden. Open the Dashboard menu to turn some back on.</div></section>
 </div>
 
 <!-- ADD -->
@@ -531,11 +566,23 @@ svg text{font-family:var(--f)}
 
 <script src="https://cdn.jsdelivr.net/npm/game-tracker-engine@1/e.js" onerror=""></script>
 <script>
-const SK="gft_v4",WK="gft_v4_w",FK="gft_v4_f";
+const SK="gft_v4",WK="gft_v4_w",FK="gft_v4_f",DK="gft_v4_dash";
 const DW={graphics:.25,gameplay:.35,story:.15,longevity:.2,sound:.05};
 let W={...DW};
 const C=[{k:"graphics",l:"Graphics",s:"GFX",c:"rgba(255,255,255,.75)",c2:"#e2e8f0"},{k:"gameplay",l:"Gameplay",s:"Play",c:"rgba(56,189,248,.75)",c2:"#38bdf8"},{k:"story",l:"Story",s:"Story",c:"rgba(217,70,239,.75)",c2:"#d946ef"},{k:"longevity",l:"Longevity",s:"Long",c:"rgba(251,191,36,.75)",c2:"#fbbf24"},{k:"sound",l:"Sound",s:"Snd",c:"rgba(74,222,128,.75)",c2:"#4ade80"}];
 const TONES=[{stroke:"rgba(255,255,255,.75)",fill:"rgba(255,255,255,.06)",solid:"rgba(255,255,255,.75)"},{stroke:"rgba(217,70,239,.75)",fill:"rgba(217,70,239,.07)",solid:"rgba(217,70,239,.75)"},{stroke:"rgba(56,189,248,.75)",fill:"rgba(56,189,248,.07)",solid:"rgba(56,189,248,.75)"},{stroke:"rgba(251,191,36,.75)",fill:"rgba(251,191,36,.07)",solid:"rgba(251,191,36,.75)"}];
+const DASH_DEF=[
+  {id:"hero",label:"Hero",desc:"Title and live score"},
+  {id:"stats",label:"Stats",desc:"Summary cards"},
+  {id:"now-playing",label:"Now Playing",desc:"Current progress"},
+  {id:"milestones",label:"Milestones",desc:"Trophies and streaks"},
+  {id:"charts",label:"Taste & Top Rated",desc:"Radar and rankings"},
+  {id:"activity",label:"Activity",desc:"Monthly completions"},
+  {id:"hours-score",label:"Hours vs Score",desc:"Playtime relationship"},
+  {id:"timeline",label:"Timeline",desc:"Score trend over time"},
+  {id:"recent",label:"Recent",desc:"Latest finished games"},
+];
+
 
 /* Tiered milestones */
 const MS=[
@@ -560,7 +607,7 @@ const DEMO=[
   {id:crypto.randomUUID(),title:"Metaphor: ReFantazio",platform:"PC",genre:"JRPG",completionDate:"",hoursPlayed:30,graphics:8.5,gameplay:8,story:8,longevity:7,sound:9,notes:"Atlus magic.",status:"Playing",tags:["JRPG"],progress:40},
 ];
 
-let G=[],editId=null,selIds=[],viewMode="list",formMode="full",formTags=[],recapOpen=false,libView="finished",activeTagFilter=null,activeGenreRadar=null,randomPick=null;
+let G=[],editId=null,selIds=[],viewMode="list",formMode="full",formTags=[],recapOpen=false,libView="finished",activeTagFilter=null,activeGenreRadar=null,randomPick=null,dashLayout=[...DASH_DEF.map(x=>({...x,visible:true}))],dashMenuOpen=false;
 const $=id=>document.getElementById(id);
 
 /* UTIL */
@@ -585,13 +632,15 @@ function cfm(t,p,fn){$("cfmT").textContent=t;$("cfmP").textContent=p;$("cfmModal
 
 /* Storage */
 function save(){localStorage.setItem(SK,JSON.stringify(G))}
-function load(){try{const w=localStorage.getItem(WK);if(w)Object.assign(W,JSON.parse(w))}catch{}try{const r=localStorage.getItem(SK);if(r){const p=JSON.parse(r);if(Array.isArray(p)&&p.length){G=p.map(nm);return}}}catch{}G=DEMO.map(nm);save()}
+function normDash(raw){const m=new Map(Array.isArray(raw)?raw.filter(x=>x&&typeof x.id==="string").map(x=>[x.id,x]):[]);const ord=Array.isArray(raw)?raw.map(x=>x?.id).filter(id=>DASH_DEF.some(d=>d.id===id)):[];const final=[...ord,...DASH_DEF.map(d=>d.id).filter(id=>!ord.includes(id))];return final.map(id=>{const d=DASH_DEF.find(x=>x.id===id),r=m.get(id);return{...d,visible:r?.visible??true}})}
+function saveDash(){try{localStorage.setItem(DK,JSON.stringify(dashLayout))}catch{}}
+function load(){try{const w=localStorage.getItem(WK);if(w)Object.assign(W,JSON.parse(w))}catch{}try{const d=localStorage.getItem(DK);if(d)dashLayout=normDash(JSON.parse(d))}catch{}try{const r=localStorage.getItem(SK);if(r){const p=JSON.parse(r);if(Array.isArray(p)&&p.length){G=p.map(nm);return}}}catch{}G=DEMO.map(nm);save()}
 function saveW(){localStorage.setItem(WK,JSON.stringify(W))}
 function saveFilters(){try{localStorage.setItem(FK,JSON.stringify({sort:$("sortBy").value,dir:$("sortDir").value,view:viewMode}))}catch{}}
 function loadFilters(){try{const f=JSON.parse(localStorage.getItem(FK));if(f){if(f.sort)$("sortBy").value=f.sort;if(f.dir)$("sortDir").value=f.dir;if(f.view){viewMode=f.view;document.querySelectorAll(".vt button").forEach(b=>b.classList.toggle("active",b.dataset.view===viewMode))}}}catch{}}
 
 /* Tabs */
-function switchTab(t){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));$("page"+t.charAt(0).toUpperCase()+t.slice(1)).classList.add("active");document.querySelector(`[data-tab="${t}"]`).classList.add("active");window.scrollTo(0,0)}
+function switchTab(t){dashMenuOpen=false;document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));$("page"+t.charAt(0).toUpperCase()+t.slice(1)).classList.add("active");document.querySelector(`[data-tab="${t}"]`).classList.add("active");updDashDd();window.scrollTo(0,0)}
 
 /* Form */
 const FI={title:"f_title",platform:"f_plat",genre:"f_genre",completionDate:"f_date",hoursPlayed:"f_hours",status:"f_status",graphics:"f_gfx",gameplay:"f_play",story:"f_story",longevity:"f_long",sound:"f_snd",notes:"f_notes",progress:"f_prog"};
@@ -702,12 +751,44 @@ function renderWE(){$("wSliders").innerHTML=C.map(m=>{const p=Math.round(W[m.k]*
 function updWT(){const t=Math.round(Object.values(W).reduce((s,v)=>s+v,0)*100);$("wTotal").textContent=`Total: ${t}%`;$("wTotal").className="weight-total "+(t===100?"valid":"invalid")}
 function updFormula(){$("formulaText").textContent=C.map(m=>`${m.s}×${Math.round(W[m.k]*100)}%`).join(" + ")}
 
+
+/* Dashboard layout */
+function renderDashMenu(){
+  const m=$("dashDdMenu"); if(!m) return;
+  m.innerHTML=`<div class="dash-dd-head"><div><div class="dash-dd-title">Home layout</div><div class="dash-dd-sub">Show, hide, and reorder Home panels.</div></div><button class="dash-dd-reset" type="button" id="dashResetBtn">Reset</button></div><div class="dash-dd-list">`+
+    dashLayout.map((it,i)=>`<div class="dash-dd-item"><div class="dash-dd-meta"><div class="dash-dd-label">${E(it.label)}</div><div class="dash-dd-desc">${E(it.desc)}</div></div><div class="dash-dd-actions"><button class="dash-mini-btn ${it.visible?"active":""}" type="button" data-dash-toggle="${it.id}">${it.visible?"Shown":"Hidden"}</button><button class="dash-mini-btn" type="button" data-dash-move="${it.id}" data-dir="up" ${i===0?"disabled":""}>↑</button><button class="dash-mini-btn" type="button" data-dash-move="${it.id}" data-dir="down" ${i===dashLayout.length-1?"disabled":""}>↓</button></div></div>`).join("")+
+  `</div>`;
+  m.querySelectorAll("[data-dash-toggle]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();toggleDash(b.dataset.dashToggle)}));
+  m.querySelectorAll("[data-dash-move]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();moveDash(b.dataset.dashMove,b.dataset.dir)}));
+  const rb=$("dashResetBtn"); if(rb) rb.addEventListener("click",e=>{e.stopPropagation();resetDash()});
+}
+function updDashDd(){const d=$("dashDd"); if(!d) return; d.classList.toggle("open",dashMenuOpen); if(dashMenuOpen) renderDashMenu()}
+function toggleDash(id){dashLayout=dashLayout.map(it=>it.id===id?{...it,visible:!it.visible}:it);saveDash();refresh()}
+function moveDash(id,dir){const i=dashLayout.findIndex(it=>it.id===id);if(i<0)return;const ni=dir==="up"?i-1:i+1;if(ni<0||ni>=dashLayout.length)return;const nx=[...dashLayout];[nx[i],nx[ni]]=[nx[ni],nx[i]];dashLayout=nx;saveDash();refresh()}
+function resetDash(){dashLayout=DASH_DEF.map(x=>({...x,visible:true}));saveDash();dashMenuOpen=false;updDashDd();refresh();toast("Home layout reset.")}
+function applyDashLayout(){
+  const page=$("pageDash"); if(!page) return;
+  const panels=[...page.querySelectorAll("[data-dash-panel]")];
+  const order=new Map(dashLayout.map((it,i)=>[it.id,i]));
+  panels.sort((a,b)=>(order.get(a.dataset.dashPanel)??999)-(order.get(b.dataset.dashPanel)??999)).forEach(p=>page.appendChild(p));
+  let visibleCount=0;
+  panels.forEach(p=>{
+    const cfg=dashLayout.find(it=>it.id===p.dataset.dashPanel);
+    const visible=cfg?cfg.visible:true;
+    p.classList.toggle("dash-hidden",!visible);
+    if(visible) visibleCount++;
+  });
+  $("dashEmpty").classList.toggle("show",visibleCount===0);
+}
+
 /* Refresh */
-function refresh(){popFilters();compStats();renderNP();renderMs();drawRadar("radar",catAvg(),130,102,64);renderTop();renderHeatmap();renderScatter();renderTimeline();renderInsights();renderLib();renderTier();renderYR();renderRecent();renderLibRecap();renderGenreRadars();renderTagCloud();updateFab();updatePreview();updFormula()}
+function refresh(){popFilters();compStats();renderNP();renderMs();drawRadar("radar",catAvg(),130,102,64);renderTop();renderHeatmap();renderScatter();renderTimeline();renderInsights();renderLib();renderTier();renderYR();renderRecent();renderLibRecap();renderGenreRadars();renderTagCloud();updateFab();updatePreview();updFormula();applyDashLayout();updDashDd()}
 
 /* Events */
 function wire(){
   document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+  $("dashDdBtn").addEventListener("click",e=>{e.stopPropagation();dashMenuOpen=!dashMenuOpen;updDashDd()});
+  document.addEventListener("click",e=>{const dd=$("dashDd");if(dd&&!dd.contains(e.target)&&dashMenuOpen){dashMenuOpen=false;updDashDd()}});
   Object.values(FI).forEach(id=>{const e=$(id);if(e){e.addEventListener("input",updatePreview);if(e.type==="range"){e.addEventListener("input",()=>uST(e));uST(e)}}});
   document.querySelectorAll(".mode-btn[data-mode]").forEach(b=>b.addEventListener("click",()=>setFormMode(b.dataset.mode)));
   $("f_title").addEventListener("input",checkDup);
@@ -739,7 +820,7 @@ function wire(){
   $("wReset").addEventListener("click",()=>{Object.assign(W,DW);renderWE()});
   $("wSave").addEventListener("click",()=>{const t=Math.round(Object.values(W).reduce((s,v)=>s+v,0)*100);if(t!==100){toast("Must total 100%.");return}saveW();$("weightModal").classList.remove("show");refresh();toast("Saved!")});
   [$("weightModal"),$("cfmModal")].forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}));
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("weightModal").classList.remove("show");$("cfmModal").classList.remove("show")}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){dashMenuOpen=false;updDashDd();$("weightModal").classList.remove("show");$("cfmModal").classList.remove("show")}});
 }
 
 load();wire();loadFilters();resetForm();refresh();
