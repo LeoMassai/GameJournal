@@ -136,6 +136,7 @@ input[type=range]{-webkit-appearance:none;appearance:none;height:5px;border-radi
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:999px;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 10px rgba(167,139,250,.3)}
 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:999px;border:2px solid var(--bg);background:var(--accent)}
 .slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+.sg-full{grid-column:span 2}
 .tags-input-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .tags-input-row input{flex:1;min-width:100px}
 .tag-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
@@ -287,12 +288,15 @@ svg text{font-family:var(--f)}
 /* Share Canvas */
 #shareCanvas{display:none}
 
-/* Floating Action Button */
-.fab{position:fixed;bottom:calc(68px + var(--safe-b));right:16px;z-index:90;display:none;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.78rem;font-weight:700;box-shadow:0 6px 24px rgba(167,139,250,.35),0 2px 8px rgba(0,0,0,.3);cursor:pointer;border:none;font-family:var(--f);animation:fabIn .25s ease;min-height:auto;letter-spacing:.01em}
-.fab.show{display:flex}
-.fab:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(167,139,250,.45)}
-.fab .fab-count{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:rgba(255,255,255,.25);font-size:.66rem;font-weight:800}
+/* Floating Action Buttons */
+.fab-group{position:fixed;bottom:calc(68px + var(--safe-b));right:16px;z-index:90;display:none;align-items:center;gap:6px;animation:fabIn .25s ease}
+.fab-group.show{display:flex}
 @keyframes fabIn{from{opacity:0;transform:translateY(12px) scale(.9)}to{opacity:1;transform:none}}
+.fab{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.76rem;font-weight:700;box-shadow:0 6px 24px rgba(167,139,250,.35),0 2px 8px rgba(0,0,0,.3);cursor:pointer;border:none;font-family:var(--f);min-height:auto;letter-spacing:.01em}
+.fab:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(167,139,250,.45)}
+.fab .fab-count{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:999px;background:rgba(255,255,255,.25);font-size:.62rem;font-weight:800}
+.fab-clear{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--m1);font-size:.82rem;cursor:pointer;font-family:var(--f);min-height:auto;padding:0;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.fab-clear:hover{background:rgba(251,113,133,.1);border-color:rgba(251,113,133,.2);color:var(--rose);transform:translateY(-1px)}
 
 /* Recent item selected state */
 .recent-item.sel{border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)}
@@ -313,35 +317,75 @@ svg text{font-family:var(--f)}
 .cmp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
 .cmp-table{min-width:500px}
 
+/* Mobile comparison cards (replaces table on small screens) */
+.cmp-cards-mobile{display:none}
+.cmp-card-m{padding:10px;border-radius:var(--rs);background:rgba(0,0,0,.12);border:1px solid var(--line);margin-bottom:6px}
+.cmp-card-m-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
+.cmp-card-m-name{font-family:var(--fd);font-weight:700;font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.cmp-card-m-bars{display:grid;gap:5px}
+.cmp-card-m-row{display:flex;align-items:center;gap:6px}
+.cmp-card-m-lbl{font-size:.64rem;color:var(--m2);min-width:38px;text-transform:uppercase;letter-spacing:.05em}
+.cmp-card-m-track{flex:1;height:6px;border-radius:999px;background:rgba(255,255,255,.04);overflow:hidden}
+.cmp-card-m-fill{height:100%;border-radius:inherit;transition:width .3s}
+.cmp-card-m-val{font-size:.7rem;font-weight:700;min-width:24px;text-align:right}
+.cmp-card-m-meta{display:flex;gap:8px;margin-top:6px;font-size:.64rem;color:var(--m2)}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:700px){
   .hero{flex-direction:column;align-items:stretch}
   .gauge-box{width:100%;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
   .charts-row,.yr-grid{grid-template-columns:1fr}
-  .cmp-grid{grid-template-columns:1fr}
+
+  /* ── Insights: full mobile overhaul ── */
+  .cmp-grid{grid-template-columns:1fr;gap:8px}
+  .cmp-grid>div:first-child svg{max-height:180px}
+  /* Hide desktop table, show mobile cards */
+  .cmp-table-wrap{display:none}
+  .cmp-cards-mobile{display:block}
+  .stack-track{height:10px}
+  .stack-head{font-size:.66rem}
+  .sel-chip{font-size:.64rem;padding:3px 7px}
+  .legend-item{font-size:.62rem}
+
+  /* ── Stats ── */
   .stats{grid-template-columns:1fr 1fr}
+
+  /* ── Form sliders: BIG touch targets ── */
   .fg{grid-template-columns:1fr}
   .sp2{grid-column:span 1}
-  .slider-grid{grid-template-columns:1fr;gap:10px 0}
-  .sg{gap:8px;padding:4px 0}
-  .sg label{min-width:56px;font-size:.72rem}
-  .sg input[type=range]{min-width:0;flex:1}
-  .sv{min-width:30px;font-size:.88rem}
+  .slider-grid{grid-template-columns:1fr;gap:14px 0}
+  .sg{gap:10px;padding:8px 0;min-height:40px}
+  .sg-full{grid-column:span 1}
+  .sg label{min-width:64px;font-size:.78rem}
+  .sg input[type=range]{min-width:0;flex:1;height:10px;border-radius:999px}
+  .sg input[type=range]::-webkit-slider-thumb{width:26px;height:26px;border-width:3px;box-shadow:0 0 14px rgba(167,139,250,.4)}
+  .sg input[type=range]::-moz-range-thumb{width:26px;height:26px;border-width:3px}
+  .sv{min-width:34px;font-size:.95rem}
+
+  /* ── Library ── */
   .search-w{min-width:100%}
   .toolbar{width:100%}
   .toolbar>*{flex:1 1 auto}
   .cards.grid-view{grid-template-columns:1fr}
+  /* Year recap */
   .yr-tl{grid-template-columns:repeat(6,1fr)}
   .yr-champs{grid-template-columns:1fr 1fr}
+  .yr{padding:12px}
+  .yr-title{font-size:1rem}
   .tier-game{max-width:100px}
   .gc-bars{grid-template-columns:repeat(5,1fr);gap:3px}
-  .fab{right:12px;padding:8px 14px;font-size:.72rem}
+  .fab-group{right:12px}
+  .fab{padding:8px 12px;font-size:.7rem}
+  .fab-clear{width:34px;height:34px;font-size:.78rem}
 }
 @media(max-width:380px){
   .stats{grid-template-columns:1fr}
   .gc-title{font-size:.85rem}
   .yr-hero{grid-template-columns:repeat(2,1fr)}
   .gc-bars{grid-template-columns:repeat(3,1fr)}
+  .sg label{min-width:56px;font-size:.74rem}
+  .sg input[type=range]{height:10px}
+  .cmp-grid>div:first-child svg{max-height:160px}
 }
 </style>
 </head>
@@ -410,7 +454,7 @@ svg text{font-family:var(--f)}
         <div class="sg"><label>Gameplay</label><input type="range" id="f_play" min="0" max="10" step="0.1" value="5"/><div class="sv" id="vPlay">5.0</div></div>
         <div class="sg"><label>Story</label><input type="range" id="f_story" min="0" max="10" step="0.1" value="5"/><div class="sv" id="vStory">5.0</div></div>
         <div class="sg"><label>Longevity</label><input type="range" id="f_long" min="0" max="10" step="0.1" value="5"/><div class="sv" id="vLong">5.0</div></div>
-        <div class="sg" style="grid-column:span 2"><label>Sound</label><input type="range" id="f_snd" min="0" max="10" step="0.1" value="5"/><div class="sv" id="vSnd">5.0</div></div>
+        <div class="sg sg-full"><label>Sound</label><input type="range" id="f_snd" min="0" max="10" step="0.1" value="5"/><div class="sv" id="vSnd">5.0</div></div>
       </div>
       <div class="full-field" style="margin-top:6px">
         <label>Tags</label>
@@ -474,7 +518,7 @@ svg text{font-family:var(--f)}
       <div class="sel-chips" id="selChips"></div>
       <div class="cmp-grid">
         <div><svg id="cmpRadar" viewBox="0 0 280 230" width="100%" height="100%" style="max-height:230px"></svg><div class="legend-row" id="cmpLegend"></div></div>
-        <div><div class="cmp-table-wrap"><table class="cmp-table" id="cmpTable"></table></div><div class="stack-legend" id="stackLegend"></div><div id="stacks"></div></div>
+        <div><div class="cmp-table-wrap"><table class="cmp-table" id="cmpTable"></table></div><div class="cmp-cards-mobile" id="cmpCardsMobile"></div><div class="stack-legend" id="stackLegend"></div><div id="stacks"></div></div>
       </div>
     </div>
   </section>
@@ -498,7 +542,10 @@ svg text{font-family:var(--f)}
 
 </div><!-- /wrap -->
 
-<div class="fab" id="fab" role="button" tabindex="0"><span>🔍 Compare</span><span class="fab-count" id="fabCount">0</span></div>
+<div class="fab-group" id="fabGroup">
+  <button class="fab-clear" id="fabClear" type="button" title="Clear selection">✕</button>
+  <button class="fab" id="fab" type="button"><span>🔍 Compare</span><span class="fab-count" id="fabCount">0</span></button>
+</div>
 <div class="toast" id="toast"><span id="toastTxt"></span></div>
 <div class="modal-overlay" id="weightModal"><div class="modal"><h2>Edit Weights</h2><p>Must total 100%.</p><div id="wSliders"></div><div class="weight-total" id="wTotal">Total: 100%</div><div class="confirm-actions"><button class="primary" type="button" id="wSave">Save</button><button class="secondary" type="button" id="wReset">Reset</button><button class="secondary" type="button" id="wCancel">Cancel</button></div></div></div>
 <div class="modal-overlay" id="confirmModal"><div class="modal"><h2 id="cfmTitle"></h2><p id="cfmText"></p><div class="confirm-actions"><button class="danger" type="button" id="cfmYes">Confirm</button><button class="secondary" type="button" id="cfmNo">Cancel</button></div></div></div>
@@ -732,6 +779,9 @@ function renderInsights(){
   // Stacks
   $("stackLegend").innerHTML=C.map(m=>`<div class="legend-item"><span class="legend-sw" style="background:${m.c}"></span>${m.s}</div>`).join("");
   $("stacks").innerHTML=sel.map(g=>{const s=sc(g);return`<div class="stack-row"><div class="stack-head"><span style="font-weight:700;font-size:.7rem">${E(sh(g.title,20))}</span><span style="font-size:.64rem;color:var(--m2)">${F(s,2)}</span></div><div class="stack-track">${C.map(m=>{const w=N(g[m.k])*W[m.k];return`<div class="stack-seg" style="width:${(w/10)*100}%;background:${m.c}"></div>`}).join("")}</div></div>`}).join("");
+  // Mobile comparison cards
+  $("cmpCardsMobile").innerHTML=sel.map((g,i)=>{const s=sc(g),d=Number((s-avg).toFixed(2)),t_=ti(s);
+    return`<div class="cmp-card-m"><div class="cmp-card-m-head"><span class="cmp-card-m-name" style="color:${TONES[i%4].solid}">${E(g.title)}</span><span class="sp ${t_.c}" style="font-size:.64rem;padding:2px 6px">${F(s,2)}</span><span class="cmp-delta ${d>=0?"pos":"neg"}" style="font-size:.64rem">${d>=0?"+":""}${F(d,2)}</span></div><div class="cmp-card-m-bars">${C.map(m=>`<div class="cmp-card-m-row"><span class="cmp-card-m-lbl">${m.s}</span><div class="cmp-card-m-track"><div class="cmp-card-m-fill" style="width:${g[m.k]*10}%;background:${m.c}"></div></div><span class="cmp-card-m-val">${F(g[m.k],1)}</span></div>`).join("")}</div><div class="cmp-card-m-meta"><span>${E(g.platform||"?")}</span><span>${E(g.genre||"?")}</span><span>${F(g.hoursPlayed,0)}h</span></div></div>`}).join("");
 }
 
 /* ═══ YEAR RECAP ═══ */
@@ -855,9 +905,9 @@ function renderRecent(){
 
 /* ═══ FLOATING COMPARE BUTTON ═══ */
 function updateFab(){
-  const fab=$("fab"),cnt=$("fabCount");
-  if(selIds.length>0){fab.classList.add("show");cnt.textContent=selIds.length}
-  else{fab.classList.remove("show")}
+  const grp=$("fabGroup"),cnt=$("fabCount");
+  if(selIds.length>0){grp.classList.add("show");cnt.textContent=selIds.length}
+  else{grp.classList.remove("show")}
 }
 
 /* ═══ LIBRARY RECAP BANNER ═══ */
@@ -897,6 +947,7 @@ function wire(){
   $("dashAddBtn").addEventListener("click",()=>switchTab("add"));
   // Floating compare button
   $("fab").addEventListener("click",()=>{switchTab("cmp");renderInsights();setTimeout(()=>window.scrollTo(0,0),50)});
+  $("fabClear").addEventListener("click",()=>{clearSel();toast("Selection cleared.")});
   // Library filters
   ["searchInput","fPlatform","fGenre","fYear","fStatus","sortBy","sortDir"].forEach(id=>{$(id).addEventListener("input",()=>{renderLib();renderYR();renderLibRecap()});$(id).addEventListener("change",()=>{if(id==="fYear")recapOpen=false;renderLib();renderYR();renderLibRecap()})});
   // Library recap banner → go to Insights and open recap
