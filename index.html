@@ -184,8 +184,6 @@ button:active{transform:none}
 .gc-tag.sel-tag{color:var(--accent);border-color:rgba(167,139,250,.18)}
 .gc-tag.status-tag{border-color:rgba(74,222,128,.15);color:var(--green)}
 .gc-tag.status-dropped{border-color:rgba(251,113,133,.15);color:var(--rose)}
-.gc-scores{display:flex;gap:5px;margin-top:4px;font-size:.64rem;color:var(--m2)}
-.gc-scores b{color:var(--text);font-weight:700}
 .gc-notes{margin-top:4px;font-size:.68rem;color:var(--m1);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gc-actions{display:flex;gap:5px;margin-top:6px}
 .gc-actions button{min-height:28px;padding:3px 8px;font-size:.68rem}
@@ -289,9 +287,62 @@ svg text{font-family:var(--f)}
 /* Share Canvas */
 #shareCanvas{display:none}
 
+/* Floating Action Button */
+.fab{position:fixed;bottom:calc(68px + var(--safe-b));right:16px;z-index:90;display:none;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.78rem;font-weight:700;box-shadow:0 6px 24px rgba(167,139,250,.35),0 2px 8px rgba(0,0,0,.3);cursor:pointer;border:none;font-family:var(--f);animation:fabIn .25s ease;min-height:auto;letter-spacing:.01em}
+.fab.show{display:flex}
+.fab:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(167,139,250,.45)}
+.fab .fab-count{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:rgba(255,255,255,.25);font-size:.66rem;font-weight:800}
+@keyframes fabIn{from{opacity:0;transform:translateY(12px) scale(.9)}to{opacity:1;transform:none}}
+
+/* Recent item selected state */
+.recent-item.sel{border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.04)}
+.recent-item .sel-check{display:none;font-size:.7rem;color:var(--accent)}
+.recent-item.sel .sel-check{display:block}
+.recent-item.sel .recent-rank{display:none}
+
+/* Mini score bars on game cards */
+.gc-bars{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px}
+.gc-bar-item{display:flex;flex-direction:column;gap:2px}
+.gc-bar-head{display:flex;justify-content:space-between;align-items:baseline}
+.gc-bar-lbl{font-size:.56rem;color:var(--m2);text-transform:uppercase;letter-spacing:.06em}
+.gc-bar-val{font-size:.64rem;font-weight:700;color:var(--text)}
+.gc-bar-track{height:4px;border-radius:999px;background:rgba(255,255,255,.04);overflow:hidden}
+.gc-bar-fill{height:100%;border-radius:inherit;transition:width .3s}
+
+/* Comparison table mobile scroll */
+.cmp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.cmp-table{min-width:500px}
+
 /* ═══ RESPONSIVE ═══ */
-@media(max-width:700px){.hero{flex-direction:column;align-items:stretch}.gauge-box{width:100%;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}.charts-row,.cmp-grid,.yr-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.fg{grid-template-columns:1fr}.sp2{grid-column:span 1}.slider-grid{grid-template-columns:1fr}.search-w{min-width:100%}.toolbar{width:100%}.toolbar>*{flex:1 1 auto}.cards.grid-view{grid-template-columns:1fr}.yr-tl{grid-template-columns:repeat(6,1fr)}.yr-champs{grid-template-columns:1fr 1fr}.tier-game{max-width:100px}}
-@media(max-width:380px){.stats{grid-template-columns:1fr}.gc-title{font-size:.85rem}.yr-hero{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+  .hero{flex-direction:column;align-items:stretch}
+  .gauge-box{width:100%;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .charts-row,.yr-grid{grid-template-columns:1fr}
+  .cmp-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .fg{grid-template-columns:1fr}
+  .sp2{grid-column:span 1}
+  .slider-grid{grid-template-columns:1fr;gap:10px 0}
+  .sg{gap:8px;padding:4px 0}
+  .sg label{min-width:56px;font-size:.72rem}
+  .sg input[type=range]{min-width:0;flex:1}
+  .sv{min-width:30px;font-size:.88rem}
+  .search-w{min-width:100%}
+  .toolbar{width:100%}
+  .toolbar>*{flex:1 1 auto}
+  .cards.grid-view{grid-template-columns:1fr}
+  .yr-tl{grid-template-columns:repeat(6,1fr)}
+  .yr-champs{grid-template-columns:1fr 1fr}
+  .tier-game{max-width:100px}
+  .gc-bars{grid-template-columns:repeat(5,1fr);gap:3px}
+  .fab{right:12px;padding:8px 14px;font-size:.72rem}
+}
+@media(max-width:380px){
+  .stats{grid-template-columns:1fr}
+  .gc-title{font-size:.85rem}
+  .yr-hero{grid-template-columns:repeat(2,1fr)}
+  .gc-bars{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
@@ -423,7 +474,7 @@ svg text{font-family:var(--f)}
       <div class="sel-chips" id="selChips"></div>
       <div class="cmp-grid">
         <div><svg id="cmpRadar" viewBox="0 0 280 230" width="100%" height="100%" style="max-height:230px"></svg><div class="legend-row" id="cmpLegend"></div></div>
-        <div><table class="cmp-table" id="cmpTable"></table><div class="stack-legend" id="stackLegend"></div><div id="stacks"></div></div>
+        <div><div class="cmp-table-wrap"><table class="cmp-table" id="cmpTable"></table></div><div class="stack-legend" id="stackLegend"></div><div id="stacks"></div></div>
       </div>
     </div>
   </section>
@@ -447,6 +498,7 @@ svg text{font-family:var(--f)}
 
 </div><!-- /wrap -->
 
+<div class="fab" id="fab" role="button" tabindex="0"><span>🔍 Compare</span><span class="fab-count" id="fabCount">0</span></div>
 <div class="toast" id="toast"><span id="toastTxt"></span></div>
 <div class="modal-overlay" id="weightModal"><div class="modal"><h2>Edit Weights</h2><p>Must total 100%.</p><div id="wSliders"></div><div class="weight-total" id="wTotal">Total: 100%</div><div class="confirm-actions"><button class="primary" type="button" id="wSave">Save</button><button class="secondary" type="button" id="wReset">Reset</button><button class="secondary" type="button" id="wCancel">Cancel</button></div></div></div>
 <div class="modal-overlay" id="confirmModal"><div class="modal"><h2 id="cfmTitle"></h2><p id="cfmText"></p><div class="confirm-actions"><button class="danger" type="button" id="cfmYes">Confirm</button><button class="secondary" type="button" id="cfmNo">Cancel</button></div></div></div>
@@ -630,7 +682,7 @@ function renderLib(){
     return`<article class="gc ${sel?"selected":""}" data-card="${g.id}">
       <div class="gc-row"><span class="gc-title">${E(g.title)}</span><span class="sp ${t_.c}">★ ${F(s,2)}</span><span class="gc-tag ${sel?"sel-tag":""}" style="font-size:.6rem">${sel?"✓":"⊕"}</span></div>
       <div class="gc-meta"><span class="gc-tag">${E(g.platform||"?")}</span><span class="gc-tag">${E(g.genre||"?")}</span><span class="gc-tag">${E(fD(g.completionDate))}</span><span class="gc-tag">${F(g.hoursPlayed,0)}h</span><span class="gc-tag ${statusCls}">${E(g.status||"Main Story")}</span>${tagHtml}</div>
-      <div class="gc-scores">${C.map(m=>`<span>${m.s} <b>${F(g[m.k],1)}</b></span>`).join("")}</div>
+      <div class="gc-bars">${C.map(m=>{const v=g[m.k];return`<div class="gc-bar-item"><div class="gc-bar-head"><span class="gc-bar-lbl">${m.s}</span><span class="gc-bar-val">${F(v,1)}</span></div><div class="gc-bar-track"><div class="gc-bar-fill" style="width:${v*10}%;background:${m.c}"></div></div></div>`}).join("")}</div>
       ${g.notes?`<div class="gc-notes">"${E(g.notes)}"</div>`:""}
       <div class="gc-actions"><button class="secondary" data-edit="${g.id}">✎</button><button class="secondary" data-del="${g.id}">✕</button></div>
     </article>`}).join("");
@@ -648,8 +700,8 @@ function renderTier(){
 
 /* ═══ COMPARE ═══ */
 function selGames(){return selIds.map(id=>G.find(g=>g.id===id)).filter(Boolean)}
-function toggleSel(id){if(selIds.includes(id))selIds=selIds.filter(x=>x!==id);else{if(selIds.length>=4){toast("Max 4 for comparison.");return}selIds=[...selIds,id]}renderInsights();renderLib()}
-function clearSel(){selIds=[];renderInsights();renderLib()}
+function toggleSel(id){if(selIds.includes(id))selIds=selIds.filter(x=>x!==id);else{if(selIds.length>=4){toast("Max 4 for comparison.");return}selIds=[...selIds,id]}renderInsights();renderLib();renderRecent();updateFab()}
+function clearSel(){selIds=[];renderInsights();renderLib();renderRecent();updateFab()}
 function libAvg(){return G.length?G.reduce((s,g)=>s+sc(g),0)/G.length:0}
 
 function renderInsights(){
@@ -791,9 +843,21 @@ function renderRecent(){
   const list=[...G].sort((a,b)=>(b.completionDate||"").localeCompare(a.completionDate||"")).slice(0,5);
   const rl=$("recentList");
   if(!list.length){rl.innerHTML='<div style="text-align:center;padding:16px;color:var(--m2);font-size:.76rem">No games yet — add your first one!</div>';return}
-  rl.innerHTML=list.map((g,i)=>{const s=sc(g),t_=ti(s);
-    return`<div class="recent-item" data-goto="${g.id}"><div class="recent-rank">${i+1}</div><div class="recent-info"><div class="recent-name">${E(g.title)}</div><div class="recent-meta"><span>${E(g.platform||"?")}</span><span>${E(g.genre||"?")}</span><span>${F(g.hoursPlayed,0)}h</span></div></div><div class="recent-right"><span class="recent-date">${E(fD(g.completionDate))}</span><span class="sp ${t_.c}" style="font-size:.62rem;padding:2px 6px">★ ${F(s,2)}</span></div></div>`}).join("");
-  rl.querySelectorAll("[data-goto]").forEach(el=>el.addEventListener("click",()=>{const id=el.dataset.goto;if(!selIds.includes(id)&&selIds.length<4)selIds.push(id);renderInsights();renderLib();switchTab("cmp")}));
+  rl.innerHTML=list.map((g,i)=>{const s=sc(g),t_=ti(s),sel=selIds.includes(g.id);
+    return`<div class="recent-item ${sel?"sel":""}" data-rid="${g.id}"><div class="recent-rank">${i+1}</div><div class="sel-check">✓</div><div class="recent-info"><div class="recent-name">${E(g.title)}</div><div class="recent-meta"><span>${E(g.platform||"?")}</span><span>${E(g.genre||"?")}</span><span>${F(g.hoursPlayed,0)}h</span></div></div><div class="recent-right"><span class="recent-date">${E(fD(g.completionDate))}</span><span class="sp ${t_.c}" style="font-size:.62rem;padding:2px 6px">★ ${F(s,2)}</span></div></div>`}).join("");
+  rl.querySelectorAll("[data-rid]").forEach(el=>el.addEventListener("click",()=>{
+    const id=el.dataset.rid;
+    if(selIds.includes(id)){selIds=selIds.filter(x=>x!==id)}
+    else{if(selIds.length>=4){toast("Max 4 for comparison.");return}selIds.push(id)}
+    renderRecent();renderLib();renderInsights();updateFab();
+  }));
+}
+
+/* ═══ FLOATING COMPARE BUTTON ═══ */
+function updateFab(){
+  const fab=$("fab"),cnt=$("fabCount");
+  if(selIds.length>0){fab.classList.add("show");cnt.textContent=selIds.length}
+  else{fab.classList.remove("show")}
 }
 
 /* ═══ LIBRARY RECAP BANNER ═══ */
@@ -810,7 +874,7 @@ function renderLibRecap(){
 }
 
 /* ═══ REFRESH ═══ */
-function refresh(){popFilters();compStats();renderMs();drawRadar("radar",catAvg(),140,112,68);renderTop();renderTimeline();renderInsights();renderLib();renderTier();renderYR();renderRecent();renderLibRecap();updatePreview();updFormula()}
+function refresh(){popFilters();compStats();renderMs();drawRadar("radar",catAvg(),140,112,68);renderTop();renderTimeline();renderInsights();renderLib();renderTier();renderYR();renderRecent();renderLibRecap();updateFab();updatePreview();updFormula()}
 
 /* ═══ EVENTS ═══ */
 function wire(){
@@ -831,6 +895,8 @@ function wire(){
   // Dashboard contextual buttons
   $("dashSeeAllBtn").addEventListener("click",()=>switchTab("lib"));
   $("dashAddBtn").addEventListener("click",()=>switchTab("add"));
+  // Floating compare button
+  $("fab").addEventListener("click",()=>{switchTab("cmp");renderInsights();setTimeout(()=>window.scrollTo(0,0),50)});
   // Library filters
   ["searchInput","fPlatform","fGenre","fYear","fStatus","sortBy","sortDir"].forEach(id=>{$(id).addEventListener("input",()=>{renderLib();renderYR();renderLibRecap()});$(id).addEventListener("change",()=>{if(id==="fYear")recapOpen=false;renderLib();renderYR();renderLibRecap()})});
   // Library recap banner → go to Insights and open recap
